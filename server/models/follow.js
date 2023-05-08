@@ -1,4 +1,6 @@
 const {Schema ,model} = require('mongoose')
+const mongoosePagination = require('mongoose-paginate-v2')
+
 
 const followSchema =Schema ({
 
@@ -16,5 +18,5 @@ const followSchema =Schema ({
     }
 })
 
-
+followSchema.plugin(mongoosePagination)
 module.exports = model('Follow',followSchema,'follows')

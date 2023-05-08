@@ -1,6 +1,6 @@
 const Follow =require('../models/follow')
-const User =require('../models/user')
-const mongoosePagination = require('mongoose-paginate-v2')
+//const User =require('../models/user')
+const followServices = require('../services/followServices')
 
 const testFollow = (req, res) => {
 
@@ -77,19 +77,80 @@ const following = (req, res ) => {
     //Test url page
     let page =1
     if(req.params.page) page= req.params.page
-    const itemPerPage=5
+    const itemPerPage=4
+    //Find follows
+    Follow.paginate(
+        {user:userId},
+        { page, limit: itemPerPage, sort: '_id' ,populate:{path:'followed',select:'-role -bio -password'}})
+        .then(async result => {
+            if (!result) {
+                return res.status(400).send({
+                    status: 'Error',
+                    message: 'No results',
+                })
+            }
+            const followUserIds = await followServices.followUserIds(userId)
 
-
-    res.status(200).send({
-        status:'Success',
-    })
+            return res.status(200).send({
+                status: 'Success',
+                message: 'List of user , I am following',
+                totalUsers: result.totalDocs,
+                currentPage: result.page,
+                totalPages: result.totalPages,
+                users: result.docs,
+                users_following:followUserIds.following,
+                user_followers:followUserIds.followers
+            })
+        })
+        .catch(error => {
+            console.log(error)
+            return res.status(400).send({
+                status: 'Error',
+                message: 'Could no get users',
+            })
+        })
 }
 //List of user are follow me 
 const followers = (req,res) => {
-    res.status(200).send({
-        status:'Success',
-    })
-    
+    // Get id identity
+    let userId = req.user.id
+    //Test url id
+    if(req.params.id) userId= req.params.id
+    //Test url page
+    let page =1
+    if(req.params.page) page= req.params.page
+    const itemPerPage=4
+    //Find follows
+    Follow.paginate(
+        {'followed':userId},
+        { page, limit: itemPerPage, sort: '_id' ,populate:{path:'user',select:'-role -bio -password'}})
+        .then(async result => {
+            if (!result) {
+                return res.status(400).send({
+                    status: 'Error',
+                    message: 'No results',
+                })
+            }
+            const followUserIds = await followServices.followUserIds(userId)
+
+            return res.status(200).send({
+                status: 'Success',
+                message: 'Followers list',
+                totalUsers: result.totalDocs,
+                currentPage: result.page,
+                totalPages: result.totalPages,
+                users: result.docs,
+                users_following:followUserIds.following,
+                user_followers:followUserIds.followers
+            })
+        })
+        .catch(error => {
+            console.log(error)
+            return res.status(400).send({
+                status: 'Error',
+                message: 'Could no get users',
+            })
+        })
 }
 
 

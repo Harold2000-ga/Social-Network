@@ -1,9 +1,13 @@
-//Import
+//Import dev
 const bcrypt = require('bcrypt')
-const User = require('../models/user')
-const { createToken } = require('../services/jwt')
 const fs = require('fs')
 const path =require('path')
+//Import services
+const { createToken } = require('../services/jwt')
+const followServices = require('../services/followServices')
+//Import models
+const User = require('../models/user')
+
 //Test
 const testUser = (req, res) => {
     let user = req.user
@@ -126,16 +130,18 @@ const profile = (req, res) => {
     User.findById(id)
         .select({ password: false, role: false })
         .exec()
-        .then(user => {
+        .then(async user => {
             if (!user) {
                 return res.status(400).send({
                     status: 'Error',
                     message: 'User no exist',
                 })
             }
+            let followThisUser = await followServices.followThisUser(req.user.id,id)
             return res.status(200).send({
                 status: 'Success',
                 user,
+                followThisUser
             })
         })
         .catch(error => {
@@ -154,13 +160,15 @@ const list = (req, res) => {
     const itemPerPage = 2
     //Paginate
     User.paginate({}, { page, limit: itemPerPage, sort: '_id' })
-        .then(result => {
+        .then(async result => {
             if (!result) {
                 return res.status(400).send({
                     status: 'Error',
                     message: 'No results',
                 })
             }
+            const followUserIds = await followServices.followUserIds(req.user.id)
+
             return res.status(200).send({
                 status: 'Success',
                 message: 'User list',
@@ -168,6 +176,8 @@ const list = (req, res) => {
                 currentPage: result.page,
                 totalPages: result.totalPages,
                 users: result.docs,
+                users_following:followUserIds.following,
+                user_followers:followUserIds.followers
             })
         })
         .catch(error => {
