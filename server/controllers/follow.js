@@ -44,7 +44,6 @@ const save = (req , res ) => {
     })
 
 }
-
 //Delete follow
 const unFollow = (req, res) => {
 
@@ -81,7 +80,7 @@ const following = (req, res ) => {
     //Find follows
     Follow.paginate(
         {user:userId},
-        { page, limit: itemPerPage, sort: '_id' ,populate:{path:'followed',select:'-role -bio -password'}})
+        { page, limit: itemPerPage, sort: '_id' ,populate:{path:'followed',select:'-role -bio -password -email'}})
         .then(async result => {
             if (!result) {
                 return res.status(400).send({
@@ -123,7 +122,7 @@ const followers = (req,res) => {
     //Find follows
     Follow.paginate(
         {'followed':userId},
-        { page, limit: itemPerPage, sort: '_id' ,populate:{path:'user',select:'-role -bio -password'}})
+        { page, limit: itemPerPage, sort: '_id' ,populate:{path:'user',select:'-role -bio -password -email'}})
         .then(async result => {
             if (!result) {
                 return res.status(400).send({

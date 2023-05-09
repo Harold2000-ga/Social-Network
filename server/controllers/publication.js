@@ -1,6 +1,13 @@
 //Import models
 const Publication = require('../models/publication')
 
+//Import dev
+const fs = require('fs')
+const path = require('path')
+
+//Import service
+const followServices = require('../services/followServices')
+
 
 //Test
 const testPublication = (req, res) => {
@@ -110,7 +117,7 @@ const user =(req, res ) => {
     //Find , paginate and populate
     Publication.paginate(
         {'user':userId},
-        {page,limit:itemPerPage,sort:'-create_at',populate:{path:'user', select:'-bio -password -__v'}})
+        {page,limit:itemPerPage,sort:'-create_at',populate:{path:'user', select:'-bio -password -__v -email'}})
         .then(item => {
             if(!item){
                 return res.status(404).send({
@@ -134,17 +141,123 @@ const user =(req, res ) => {
         
         })
 }
-
-//List
-
-
 //Upload file
+const upload = (req,res) => {
+    //Get image
+    let image = req.file.originalname
+    //Get publication id
+    const publicationId = req.params.id
+    //Verify extension
+    let splitImage=image.split('.')
+  
+    if(splitImage[1]!=='jpeg' && splitImage[1]!=='jpg' && splitImage[1]!=='svg' && splitImage[1]!=='png'){
+        console.log(splitImage[1])
+        const filePath=req.file.path
+        fs.unlinkSync(filePath)
+        return res.status(500).send({
+            status:'Error',
+            message:'Invalid extension '
+        })
+    }
+    Publication.findOneAndUpdate({'user':req.user.id,'_id':publicationId},{file:req.file.filename},{new:true}).then(Updated => {
+        if(!Updated){
+            return res.status(500).send({
+                status:'Error',
+                message:'Invalid'
+            })
 
-//Return file
+        }
+        return res.status(200).send({
+            status:'Success',
+            user:Updated,
+            file:req.file
+        })
+    }).catch(error => {
+        console.log(error)
+        return res.status(400).send({
+            status:'Error',
+            message:'Error in upload'
+        })
+    })     
+
+
+}
+//Return multimedia
+const media = (req,res) => {
+    //Get url params
+    const file = req.params.file
+    //Path real of the image
+    const filePath='./uploads/publication/'+file
+    //Test if path exist
+    fs.stat(filePath,(error,exist) => {
+        if(!exist){
+            return res.status(400).send({
+                status:'error',
+                message:'No exist the file'
+            }) 
+        }
+        
+        
+        res.sendFile(path.resolve(filePath))
+
+
+    })
+
+}
+//List of 
+const feed = async (req,res) => {
+    //Get page actual
+    let page = 1
+    if (req.params.page) page = req.params.page
+    const itemPerPage=5
+
+    //Get array of ids what I follow like user login
+    try {
+        const myFollows= (await followServices.followUserIds(req.user.id)).following    
+        //Find publication ,populate and paginate 
+        Publication.paginate({user:myFollows},
+            {page,limit:itemPerPage,sort:'-create_at', populate:{path:'user', select:'-__v -password -bio -role -email'}}).then(item => {
+            if(!item){
+                res.status(404).send({
+                    status:'Error',
+                    message:'No exist publications of some follower',
+                })
+
+            }
+            res.status(200).send({
+                status:'Success',
+                message:'List of publications',
+                totalPublications: item.totalDocs,
+                currentPage: item.page,
+                totalPages: item.totalPages,
+                Publications: item.docs,
+            })
+        }).catch(error => {
+            console.log(error)
+            res.status(404).send({
+                status:'Error',
+                message:'The publication can not be founded',
+            })
+            
+        })
+    
+    } catch (error) {
+        res.status(500).send({
+            status:'Error',
+            message:'The feed publication has not been listed',
+        })
+        
+    }
+}
 
 
 
 
 
 
-module.exports = { testPublication,save,details,remove,user }
+
+
+
+
+
+module.exports = { testPublication,save,details,remove,user,upload,media,feed}

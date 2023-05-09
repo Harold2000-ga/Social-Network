@@ -7,7 +7,8 @@ const { createToken } = require('../services/jwt')
 const followServices = require('../services/followServices')
 //Import models
 const User = require('../models/user')
-
+const Follow = require('../models/follow')
+const Publication =require('../models/publication')
 //Test
 const testUser = (req, res) => {
     let user = req.user
@@ -159,7 +160,7 @@ const list = (req, res) => {
     req.params.page && (page = parseInt(req.params.page))
     const itemPerPage = 2
     //Paginate
-    User.paginate({}, { page, limit: itemPerPage, sort: '_id' })
+    User.paginate({}, { page, limit: itemPerPage,select:'-password -email -__v ', sort: '_id' })
         .then(async result => {
             if (!result) {
                 return res.status(400).send({
@@ -215,6 +216,8 @@ const update = (req, res) => {
             if (userToUpdate.password) {
                 let password = await bcrypt.hash(userToUpdate.password, 10)
                 userToUpdate.password = password
+            }else{
+                delete userToUpdate.password
             }
             //Check if exist user updates
             let isSet = false
@@ -305,19 +308,43 @@ const avatar=(req,res) => {
     const filePath='./uploads/avatars/'+file
     //Test if path exist
     fs.stat(filePath,(error,exist) => {
-        if(!exist){
+        if(error || !exist){
             return res.status(400).send({
                 status:'error',
                 message:'No exist the image'
             }) 
         }
-        
-        
         res.sendFile(path.resolve(filePath))
-
-
     })
 
 }
+//Counter
+const counters = async (req, res) => {
+    //Get identity
+    let userId = req.user.id
+    //Test if url params
+    if (req.params.id)userId = req.params.id
 
-module.exports = { testUser, register, login, profile, list, update, upload,avatar }
+    try {
+        const following = await Follow.count({ 'user': userId })
+
+        const followed = await Follow.count({ 'followed': userId })
+
+        const publications = await Publication.count({ 'user': userId })
+
+        return res.status(200).send({
+            userId,
+            following: following,
+            followed: followed,
+            publications: publications
+        })
+    } catch (error) {
+        return res.status(500).send({
+            status: 'error',
+            message: 'Counters error',
+            error
+        })
+    }
+}
+
+module.exports = { testUser, register, login, profile, list, update, upload,avatar,counters }
