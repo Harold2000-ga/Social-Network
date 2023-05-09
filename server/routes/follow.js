@@ -8,8 +8,8 @@ router.get('/test-follow', followController.testFollow)
 
 //Routes
 router.post('/save', check.auth, followController.save)
-router.delete('/unfollow/:id',check.auth,followController.unFollow)
-router.get('/following/:id?/:page?',check.auth,followController.following)
-router.get('/followers/:id?/:page?',check.auth,followController.followers)
+router.delete('/unfollow/:id', check.auth, followController.unFollow)
+router.get('/following/:id?/:page?', check.auth, followController.following)
+router.get('/followers/:id?/:page?', check.auth, followController.followers)
 
 module.exports = router
