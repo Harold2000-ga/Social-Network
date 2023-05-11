@@ -29,8 +29,17 @@ export const Register = () => {
       <header className='content__header content__header--public'>
         <h1 className='content__title'>Register</h1>
       </header>
-      <strong>{saved == 'User register' ? saved : ''}</strong>
-      <strong>{saved == 'Error' ? saved : ''}</strong>
+      {saved == 'User register' ? (
+        <strong className='alert alert_success'>{saved}</strong>
+      ) : (
+        ''
+      )}
+      {saved == 'Error' ? (
+        <strong className='alert alert_error'>{saved}</strong>
+      ) : (
+        ''
+      )}
+
       <div className='content__posts'>
         <form className='register-form' onSubmit={saveUser}>
           <div className='form-group'>
