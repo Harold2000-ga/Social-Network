@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import { useForm } from '../../hooks/useForm'
 import { Global } from '../../helpers/Global'
+import useAuth from '../../hooks/useAuth'
+
 export const Login = () => {
   const { form, changed } = useForm()
   const [login, setLogin] = useState()
+  const { setAuth } = useAuth()
 
   const loginUser = e => {
     e.preventDefault()
@@ -18,9 +21,17 @@ export const Login = () => {
       .then(res => res.json())
       .then(data => {
         if (data.status == 'Success') {
+          //Save in storage
           localStorage.setItem('token', data.token)
           localStorage.setItem('user', JSON.stringify(data.user))
+          //Message
           setLogin('User Login')
+          //Set context
+          setAuth(data.user)
+          //Redirection
+          setTimeout(() => {
+            window.location.reload()
+          }, 800)
         }
         if (data.status == 'Error') setLogin('Error')
       })
