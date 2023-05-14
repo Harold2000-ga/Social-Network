@@ -15,7 +15,7 @@ export const Aside = () => {
         <div className='aside__profile-info'>
           <div className='profile-info__general-info'>
             <div className='general-info__container-avatar'>
-              <Avatar className='container-avatar__img' />
+              <Avatar className='container-avatar__img' item={auth} />
             </div>
 
             <div className='general-info__container-names'>
@@ -43,9 +43,7 @@ export const Aside = () => {
             <div className='stats__following'>
               <a href='#' className='following__link'>
                 <span className='following__title'>Publications</span>
-                <span className='following__number'>
-                  {counters.publications}
-                </span>
+                <span className='following__number'>{counters.publications}</span>
               </a>
             </div>
           </div>
@@ -67,12 +65,7 @@ export const Aside = () => {
               <input type='file' name='image' className='form-post__image' />
             </div>
 
-            <input
-              type='submit'
-              value='Send'
-              className='form-post__btn-submit'
-              disabled
-            />
+            <input type='submit' value='Send' className='form-post__btn-submit' disabled />
           </form>
         </div>
       </div>

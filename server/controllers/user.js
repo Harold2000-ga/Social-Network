@@ -31,10 +31,7 @@ const register = (req, res) => {
   }
   //Double user
   User.find({
-    $or: [
-      { email: params.email.toLowerCase() },
-      { nickname: params.nickname.toLowerCase() },
-    ],
+    $or: [{ email: params.email.toLowerCase() }, { nickname: params.nickname.toLowerCase() }],
   })
     .exec()
     .then(async user => {
@@ -158,12 +155,9 @@ const list = (req, res) => {
   //Get page
   let page = 1
   req.params.page && (page = parseInt(req.params.page))
-  const itemPerPage = 2
+  const itemPerPage = 5
   //Paginate
-  User.paginate(
-    {},
-    { page, limit: itemPerPage, select: '-password -email -__v ', sort: '_id' }
-  )
+  User.paginate({}, { page, limit: itemPerPage, select: '-password -email -__v ', sort: '_id' })
     .then(async result => {
       if (!result) {
         return res.status(400).send({
@@ -286,11 +280,7 @@ const upload = (req, res) => {
       message: 'Invalid extension ',
     })
   }
-  User.findOneAndUpdate(
-    { _id: req.user.id },
-    { image: req.file.filename },
-    { new: true }
-  )
+  User.findOneAndUpdate({ _id: req.user.id }, { image: req.file.filename }, { new: true })
     .then(Updated => {
       if (!Updated) {
         return res.status(500).send({

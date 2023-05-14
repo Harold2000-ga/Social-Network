@@ -1,5 +1,4 @@
 import React from 'react'
-import avatar from '../../../assets/img/user.png'
 import { NavLink } from 'react-router-dom'
 import useAuth from '../../../hooks/useAuth'
 import { Avatar } from './Avatar'
@@ -35,7 +34,7 @@ export const Nav = () => {
       <ul className='container-lists__list-end'>
         <li className='list-end__item'>
           <a href='#' className='list-end__link-image'>
-            <Avatar className='list-end__img' />
+            <Avatar className='list-end__img' item={auth} />
           </a>
         </li>
         <li className='list-end__item'>
