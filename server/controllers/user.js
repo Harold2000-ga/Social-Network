@@ -155,7 +155,7 @@ const list = (req, res) => {
   //Get page
   let page = 1
   req.params.page && (page = parseInt(req.params.page))
-  const itemPerPage = 5
+  const itemPerPage = 4
   //Paginate
   User.paginate({}, { page, limit: itemPerPage, select: '-password -email -__v ', sort: '_id' })
     .then(async result => {

@@ -5,14 +5,17 @@ import { Avatar } from '../layout/private/Avatar'
 export const People = () => {
   const [list, setList] = useState([])
   const [page, setPage] = useState(1)
+  const [more, setMore] = useState(true)
+  const [loading, setLoading] = useState(true)
+  const [following, setFollowing] = useState([])
 
   useEffect(() => {
     getUser()
-  }, [page])
+  }, [])
 
-  const getUser = () => {
+  const getUser = (next = 1) => {
     //Get list of user
-    fetch(`${Global.url}/user/list/${page}`, {
+    fetch(`${Global.url}/user/list/${next}`, {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',
@@ -21,16 +24,59 @@ export const People = () => {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.users && data.status == 'Success') setList(data.users)
+        if (data.users && data.status == 'Success') {
+          console.log(data)
+          if (list.length > 1) {
+            setList([...list, ...data.users])
+          } else {
+            setList(data.users)
+          }
+          if (list.length >= data.totalUsers - data.users.length) {
+            setMore(false)
+          }
+        }
+        setLoading(false)
       })
   }
 
   const nextPage = () => {
     let next = page + 1
-    console.log(list)
     setPage(next)
+    getUser(next)
   }
-  console.log(list)
+  const Follow = id => {
+    fetch(`${Global.url}/follow/save`, {
+      method: 'POST',
+      body: JSON.stringify({ followed: id }),
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: localStorage.getItem('token'),
+      },
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status == 'Success') {
+          setFollowing([...following, id])
+        }
+      })
+  }
+  const unFollow = id => {
+    fetch(`${Global.url}/follow/unfollow/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: localStorage.getItem('token'),
+      },
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status == 'Success') {
+          let newFollowings = following.filter(item => item._id != id)
+          setFollowing(newFollowings)
+        }
+      })
+  }
+
   return (
     <>
       <section className='layout__content'>
@@ -65,23 +111,29 @@ export const People = () => {
                 </div>
 
                 <div className='post__buttons'>
-                  <a href='#' className='post__button post__button--green'>
+                  <button
+                    className='post__button post__button--green'
+                    onClick={() => Follow(item._id)}
+                  >
                     Follow
-                  </a>
-                  {/*   <a href='#' className='post__button'>
-                UnFollow
-              </a> */}
+                  </button>
+
+                  <button className='post__button' onClick={() => unFollow(item._id)}>
+                    UnFollow
+                  </button>
                 </div>
               </article>
             )
           })}
         </div>
-
-        <div className='content__container-btn'>
-          <button className='content__btn-more-post' onClick={nextPage}>
-            Show more users
-          </button>
-        </div>
+        {loading ? <h1 className='people_loading'>Loading.....</h1> : ''}
+        {more && (
+          <div className='content__container-btn'>
+            <button className='content__btn-more-post' onClick={nextPage}>
+              Show more users
+            </button>
+          </div>
+        )}
       </section>
     </>
   )

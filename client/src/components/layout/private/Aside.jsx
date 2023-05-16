@@ -29,13 +29,13 @@ export const Aside = () => {
           <div className='profile-info__stats'>
             <div className='stats__following'>
               <a href='#' className='following__link'>
-                <span className='following__title'>Followings</span>
+                <span className='following__title'>Followers</span>
                 <span className='following__number'>{counters.followed}</span>
               </a>
             </div>
             <div className='stats__following'>
               <a href='#' className='following__link'>
-                <span className='following__title'>Followers</span>
+                <span className='following__title'>Following</span>
                 <span className='following__number'>{counters.following}</span>
               </a>
             </div>
