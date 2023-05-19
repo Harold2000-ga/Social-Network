@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { Global } from '../../helpers/Global'
-import { UserList } from './UserList'
-
-export const People = () => {
+import { UserList } from '../user/UserList'
+import { useParams } from 'react-router-dom'
+export const Following = () => {
   const [list, setList] = useState([])
   const [page, setPage] = useState(1)
   const [more, setMore] = useState(true)
   const [loading, setLoading] = useState(true)
   const [following, setFollowing] = useState([])
+  const params = useParams()
 
   useEffect(() => {
     getUser()
   }, [])
 
   const getUser = (next = 1) => {
+    const id = params.id
+
     //Get list of user
-    fetch(`${Global.url}/user/list/${next}`, {
+    fetch(`${Global.url}/follow/following/${id}/${next}`, {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',
@@ -24,8 +27,8 @@ export const People = () => {
     })
       .then(res => res.json())
       .then(data => {
+        console.log(data.users)
         if (data.users && data.status == 'Success') {
-          console.log(data)
           if (list.length > 1) {
             setList([...list, ...data.users])
           } else {
@@ -44,7 +47,7 @@ export const People = () => {
     <>
       <section className='layout__content'>
         <header className='content__header'>
-          <h1 className='content__title'>People</h1>
+          <h1 className='content__title'>Followings</h1>
         </header>
 
         <UserList

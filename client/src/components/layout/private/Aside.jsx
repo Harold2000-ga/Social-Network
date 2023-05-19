@@ -1,6 +1,7 @@
 import React from 'react'
 import useAuth from '../../../hooks/useAuth'
 import { Avatar } from './Avatar'
+import { Link } from 'react-router-dom'
 
 export const Aside = () => {
   const { auth, counters } = useAuth()
@@ -28,16 +29,16 @@ export const Aside = () => {
 
           <div className='profile-info__stats'>
             <div className='stats__following'>
-              <a href='#' className='following__link'>
+              <Link to={`followers/${auth._id}`} className='following__link'>
                 <span className='following__title'>Followers</span>
                 <span className='following__number'>{counters.followed}</span>
-              </a>
+              </Link>
             </div>
             <div className='stats__following'>
-              <a href='#' className='following__link'>
+              <Link to={`following/${auth._id}`} className='following__link'>
                 <span className='following__title'>Following</span>
                 <span className='following__number'>{counters.following}</span>
-              </a>
+              </Link>
             </div>
 
             <div className='stats__following'>
