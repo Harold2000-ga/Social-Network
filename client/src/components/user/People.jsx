@@ -126,7 +126,14 @@ export const People = () => {
             )
           })}
         </div>
-        {loading ? <h1 className='people_loading'>Loading.....</h1> : ''}
+        {loading ? (
+          <div className='loading__container'>
+            <i className='layout__loading--spin fas fa-spinner fa-spin fa-2x'></i>
+          </div>
+        ) : (
+          ''
+        )}
+
         {more && (
           <div className='content__container-btn'>
             <button className='content__btn-more-post' onClick={nextPage}>

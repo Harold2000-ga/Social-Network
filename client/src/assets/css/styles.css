@@ -450,3 +450,20 @@ button {
   border: 1px solid #8e400c;
   color: white;
 }
+.layout__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  height: 90vh;
+}
+.layout__loading--spin {
+  margin: 0 auto;
+  color: var(--color-backgroud-navbar);
+}
+.loading__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0 2rem 0;
+}

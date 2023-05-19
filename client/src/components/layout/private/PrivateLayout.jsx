@@ -8,7 +8,13 @@ export const PrivateLayout = () => {
   const { auth, loading } = useAuth()
 
   if (loading) {
-    return <h1>Loading.....</h1>
+    return (
+      <section className='layout__content'>
+        <div className='layout__loading'>
+          <i className='layout__loading--spin fas fa-spinner fa-spin fa-3x  '></i>
+        </div>
+      </section>
+    )
   } else {
     return (
       <>
