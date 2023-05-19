@@ -25,7 +25,6 @@ export const People = () => {
       .then(res => res.json())
       .then(data => {
         if (data.users && data.status == 'Success') {
-          console.log(data)
           if (list.length > 1) {
             setList([...list, ...data.users])
           } else {

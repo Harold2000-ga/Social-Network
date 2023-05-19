@@ -27,7 +27,12 @@ export const Following = () => {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data.users)
+        let cleanUsers = []
+        data.users.forEach(item => {
+          cleanUsers.push(item.followed)
+        })
+        data.users = cleanUsers
+
         if (data.users && data.status == 'Success') {
           if (list.length > 1) {
             setList([...list, ...data.users])

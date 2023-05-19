@@ -14,7 +14,7 @@ export const UserList = ({
   setPage,
   getUser,
 }) => {
-  const { auth } = useAuth()
+  const { auth, counters, setCounters } = useAuth()
 
   const nextPage = () => {
     let next = page + 1
@@ -35,6 +35,7 @@ export const UserList = ({
       .then(data => {
         if (data.status == 'Success') {
           setFollowing([...following, id])
+          setCounters({ ...counters, following: counters.following + 1 })
         }
       })
   }
@@ -50,6 +51,7 @@ export const UserList = ({
       .then(data => {
         if (data.status == 'success') {
           let newFollowings = following.filter(item => id !== item)
+          setCounters({ ...counters, following: counters.following - 1 })
           setFollowing(newFollowings)
         }
       })
@@ -60,29 +62,30 @@ export const UserList = ({
       <div className='content__posts'>
         {list?.map(item => {
           return (
-            <article className='posts__post' key={item._id}>
-              <div className='post__container'>
-                <div className='post__image-user'>
-                  <a href='#' className='post__image-link'>
-                    <Avatar className='post__user-image' item={item} />
-                  </a>
-                </div>
-
-                <div className='post__body'>
-                  <div className='post__user-info'>
-                    <a href='#' className='user-info__name'>
-                      {item.name} {item.surname}
-                    </a>
-                    <span className='user-info__divider'> | </span>
-                    <a href='#' className='user-info__create-date'>
-                      {item.date}
+            item._id !== auth._id && (
+              <article className='posts__post' key={item._id}>
+                <div className='post__container'>
+                  <div className='post__image-user'>
+                    <a href='#' className='post__image-link'>
+                      <Avatar className='post__user-image' item={item} />
                     </a>
                   </div>
 
-                  <h4 className='post__content'>{item.bio}</h4>
+                  <div className='post__body'>
+                    <div className='post__user-info'>
+                      <a href='#' className='user-info__name'>
+                        {item.name} {item.surname}
+                      </a>
+                      <span className='user-info__divider'> | </span>
+                      <a href='#' className='user-info__create-date'>
+                        {item.date}
+                      </a>
+                    </div>
+
+                    <h4 className='post__content'>{item.bio}</h4>
+                  </div>
                 </div>
-              </div>
-              {item._id !== auth._id && (
+
                 <div className='post__buttons'>
                   {!following.includes(item._id) && (
                     <button
@@ -98,8 +101,8 @@ export const UserList = ({
                     </button>
                   )}
                 </div>
-              )}
-            </article>
+              </article>
+            )
           )
         })}
       </div>
