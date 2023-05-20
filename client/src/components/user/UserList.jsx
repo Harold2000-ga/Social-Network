@@ -3,6 +3,7 @@ import React from 'react'
 import { Avatar } from '../layout/private/Avatar'
 import useAuth from '../../hooks/useAuth'
 import { Global } from '../../helpers/Global'
+import { Link } from 'react-router-dom'
 
 export const UserList = ({
   more,
@@ -62,30 +63,29 @@ export const UserList = ({
       <div className='content__posts'>
         {list?.map(item => {
           return (
-            item._id !== auth._id && (
-              <article className='posts__post' key={item._id}>
-                <div className='post__container'>
-                  <div className='post__image-user'>
-                    <a href='#' className='post__image-link'>
-                      <Avatar className='post__user-image' item={item} />
-                    </a>
-                  </div>
-
-                  <div className='post__body'>
-                    <div className='post__user-info'>
-                      <a href='#' className='user-info__name'>
-                        {item.name} {item.surname}
-                      </a>
-                      <span className='user-info__divider'> | </span>
-                      <a href='#' className='user-info__create-date'>
-                        {item.date}
-                      </a>
-                    </div>
-
-                    <h4 className='post__content'>{item.bio}</h4>
-                  </div>
+            <article className='posts__post' key={item._id}>
+              <div className='post__container'>
+                <div className='post__image-user'>
+                  <Link to={`/social/profile/${item._id}`} className='post__image-link'>
+                    <Avatar className='post__user-image' item={item} />
+                  </Link>
                 </div>
 
+                <div className='post__body'>
+                  <div className='post__user-info'>
+                    <Link to={`/social/profile/${item._id}`} className='user-info__name'>
+                      {item.name} {item.surname}
+                    </Link>
+                    <span className='user-info__divider'> | </span>
+                    <Link to={`/social/profile/${item._id}`} className='user-info__create-date'>
+                      {item.date}
+                    </Link>
+                  </div>
+
+                  <h4 className='post__content'>{item.bio}</h4>
+                </div>
+              </div>
+              {item._id !== auth._id && (
                 <div className='post__buttons'>
                   {!following.includes(item._id) && (
                     <button
@@ -101,8 +101,8 @@ export const UserList = ({
                     </button>
                   )}
                 </div>
-              </article>
-            )
+              )}
+            </article>
           )
         })}
       </div>

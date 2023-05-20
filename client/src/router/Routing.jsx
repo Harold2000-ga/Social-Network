@@ -11,6 +11,7 @@ import { People } from '../components/user/People'
 import { Config } from '../components/user/Config'
 import { Following } from '../components/follow/Following'
 import { Followers } from '../components/follow/Followers'
+import { Profile } from '../components/user/Profile'
 export const Routing = () => {
   return (
     <BrowserRouter>
@@ -31,15 +32,16 @@ export const Routing = () => {
             <Route path='config' element={<Config />} />
             <Route path='following/:id' element={<Following />} />
             <Route path='followers/:id' element={<Followers />} />
+            <Route path='profile/:id' element={<Profile />} />
           </Route>
 
           <Route
             path='*'
             element={
-              <p>
+              <header>
                 <h1>Error 404</h1>
                 <Link to='/'>Go to Home</Link>
-              </p>
+              </header>
             }
           />
         </Routes>

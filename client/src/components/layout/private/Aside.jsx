@@ -31,7 +31,7 @@ export const Aside = () => {
         }
 
         //Upload image
-        const fileInput = document.querySelector('#file')
+        const fileInput = document.querySelector('#fileUpload')
         if (data.status == 'Success' && fileInput.files[0]) {
           const formData = new FormData()
           formData.append('file0', fileInput.files[0])
@@ -68,26 +68,28 @@ export const Aside = () => {
         <div className='aside__profile-info'>
           <div className='profile-info__general-info'>
             <div className='general-info__container-avatar'>
-              <Avatar className='container-avatar__img' item={auth} />
+              <Link to={`profile/${auth._id}`}>
+                <Avatar className='container-avatar__img' item={auth} />
+              </Link>
             </div>
 
             <div className='general-info__container-names'>
-              <a href='#' className='container-names__name'>
+              <Link to={`profile/${auth._id}`} className='container-names__name'>
                 {auth.name} {auth.surname}
-              </a>
+              </Link>
               <p className='container-names__nickname'>{auth.nickname}</p>
             </div>
           </div>
 
           <div className='profile-info__stats'>
             <div className='stats__following'>
-              <Link to={`followers/${auth._id}`} className='following__link'>
+              <Link to={`/social/followers/${auth._id}`} className='following__link'>
                 <span className='following__title'>Followers</span>
                 <span className='following__number'>{counters.followed}</span>
               </Link>
             </div>
             <div className='stats__following'>
-              <Link to={`following/${auth._id}`} className='following__link'>
+              <Link to={`/social/following/${auth._id}`} className='following__link'>
                 <span className='following__title'>Following</span>
                 <span className='following__number'>{counters.following}</span>
               </Link>
@@ -120,7 +122,7 @@ export const Aside = () => {
               <label htmlFor='file' className='form-post__label' onChange={changed}>
                 Upload image
               </label>
-              <input type='file' name='file0' id='file' className='form-post__image' />
+              <input type='file' name='file0' id='fileUpload' className='form-post__image' />
             </div>
 
             <input type='submit' value='Send' className='form-post__btn-submit' />

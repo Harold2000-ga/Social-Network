@@ -154,8 +154,6 @@ body {
   flex-direction: row;
   align-items: center;
 }
-.content__header--public {
-}
 
 .content__title,
 .aside__title {
@@ -180,6 +178,17 @@ body {
   border-color: var(--color-border-btn-success-hover);
 }
 
+.content__button-right {
+  margin-left: 1rem;
+}
+.content__button-unfollow {
+  background-color: var(--color-background-btn-delete);
+  border-color: var(--color-border-btn-delete);
+}
+.content__button-unfollow:hover {
+  background-color: var(--color-background-btn-delete-hover);
+  border-color: var(--color-border-btn-delete-hover);
+}
 .content__posts {
   width: 100%;
 }

@@ -33,14 +33,14 @@ export const Nav = () => {
 
       <ul className='container-lists__list-end'>
         <li className='list-end__item'>
-          <a href='#' className='list-end__link-image'>
+          <NavLink to={`profile/${auth._id}`} className='list-end__link-image'>
             <Avatar className='list-end__img' item={auth} />
-          </a>
+          </NavLink>
         </li>
         <li className='list-end__item'>
-          <a href='#' className='list-end__link'>
+          <NavLink to={`profile/${auth._id}`} className='list-end__link'>
             <span className='list-end__name'>{auth.name}</span>
-          </a>
+          </NavLink>
         </li>
         <li className='list-end__item'>
           <NavLink to='/social/config' className='list-end__link'>
