@@ -3,13 +3,13 @@ import { Nav } from './Nav'
 import { NavLink } from 'react-router-dom'
 export const Header = () => {
   return (
-    <header className='layout__navbar'>
-      <div className='navbar__header'>
+    <nav className='layout__navbar'>
+      <header className='navbar__header'>
         <NavLink to='/' className='navbar__title'>
           REACTSOCIAL
         </NavLink>
-      </div>
+      </header>
       <Nav />
-    </header>
+    </nav>
   )
 }

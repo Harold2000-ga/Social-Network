@@ -83,7 +83,7 @@ const remove = (req, res) => {
   //Get id publication
   const id = req.params.id
   //Find and delete
-  Publication.find({ user: req.user.id, _id: id })
+  Publication.findOneAndDelete({ user: req.user.id, _id: id })
     .then(item => {
       if (!item) {
         return res.status(404).send({
@@ -222,8 +222,7 @@ const feed = async (req, res) => {
 
   //Get array of ids what I follow like user login
   try {
-    const myFollows = (await followServices.followUserIds(req.user.id))
-      .following
+    const myFollows = (await followServices.followUserIds(req.user.id)).following
     //Find publication ,populate and paginate
     Publication.paginate(
       { user: myFollows },

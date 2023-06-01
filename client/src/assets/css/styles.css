@@ -93,10 +93,14 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 1rem;
 }
 
 .menu-list__link {
-  padding: 1.8rem;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .menu-list__title {
@@ -126,7 +130,10 @@ body {
 }
 
 .list-end__link {
-  padding: 1.8rem;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .list-end__name {
@@ -475,4 +482,19 @@ button {
   align-items: center;
   justify-content: center;
   padding: 2rem 0 2rem 0;
+}
+.menu-hamburguesa {
+  display: none;
+  justify-content: end;
+  align-items: end;
+}
+.nav-hamburguesa {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 4rem 2rem;
+  background-color: var(--color-border-textarea-focus);
+  height: 100vh;
+  width: 65vh;
+  transition: all ease-in 300ms;
 }

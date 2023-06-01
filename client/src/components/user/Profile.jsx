@@ -1,5 +1,5 @@
+//Imports
 import React, { useEffect, useState } from 'react'
-import avatar from '../../assets/img/user.png'
 import { useParams } from 'react-router-dom'
 import { GetProfile } from '../../helpers/GetProfile'
 import { Avatar } from '../layout/private/Avatar'
@@ -11,15 +11,23 @@ export const Profile = () => {
   //Hooks
   const [user, setUser] = useState({})
   const [counters, setCounters] = useState({})
+  const [publications, setPublications] = useState([])
+  const [page, setPage] = useState(1)
+  const [more, setMore] = useState(true)
+  const [loading, setLoading] = useState(true)
   const [follow, setFollow] = useState(false)
   const { auth, counters: countUser, setCounters: setCountUser } = useAuth()
   const params = useParams()
+
   useEffect(() => {
     getDataUser()
+    getPublication()
     getCounters()
   }, [params.id])
 
+  // Counter for the profile
   const getCounters = () => {
+    //Get data from the API
     fetch(`${Global.url}/user/counters/${params.id}`, {
       method: 'GET',
       headers: {
@@ -29,22 +37,24 @@ export const Profile = () => {
     })
       .then(res => res.json())
       .then(data => {
+        //Update State
         setCounters(data)
       })
   }
+  //Data user and validate Follow
   const getDataUser = async () => {
     try {
+      //Get data from the API using helper GetProfile
       let dataUser = await GetProfile(params.id, setUser)
-      console.log(dataUser)
-      if (
-        dataUser.followThisUser.following.user &&
-        dataUser.followThisUser.following.user == auth._id
-      )
+      //Validate if I follow
+      if (dataUser.followThisUser.following?.user == auth._id)
+        //Update State
         setFollow(true)
     } catch (error) {
       console.log(error)
     }
   }
+  //Follow and Unfollow buttons
   const Follow = id => {
     fetch(`${Global.url}/follow/save`, {
       method: 'POST',
@@ -81,6 +91,57 @@ export const Profile = () => {
         }
       })
   }
+  //Publication from User
+  const getPublication = (nextPage = 1) => {
+    //GET from the API
+    fetch(`${Global.url}/publication/user/${params.id}/${nextPage}`, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: localStorage.getItem('token'),
+      },
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status == 'Success') {
+          if (publications.length > 1) {
+            console.log(data.Publications)
+            setPublications([...publications, ...data.Publications])
+          } else setPublications(data.Publications)
+          if (publications.length >= data.totalPublications - data.Publications.length) {
+            setMore(false)
+          }
+          setLoading(false)
+        }
+      })
+  }
+  //Logic pagination
+  const nextPage = () => {
+    const next = page + 1
+    setPage(next)
+    getPublication(next)
+  }
+  //Delete Publication from Database and Layout
+  const deletePublication = id => {
+    //Delete from the Database
+    fetch(`${Global.url}/publication/delete/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: localStorage.getItem('token'),
+      },
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status == 'Success') {
+          const filterPublications = publications.filter(item => item._id !== id)
+          setPublications(filterPublications)
+          setCounters({ ...counters, publications: counters.publications - 1 })
+        }
+      })
+  }
+
+  //Render
   return (
     <>
       <section className='layout__content'>
@@ -150,36 +211,55 @@ export const Profile = () => {
         </header>
 
         <div className='content__posts'>
-          <article className='posts__post'>
-            <div className='post__container'>
-              <div className='post__image-user'>
-                <a href='#' className='post__image-link'>
-                  <img src={avatar} className='post__user-image' alt='Foto de perfil' />
-                </a>
-              </div>
+          {publications?.map(item => {
+            return (
+              <article key={item._id} className='posts__post'>
+                <div className='post__container'>
+                  <div className='post__image-user'>
+                    <a href='#' className='post__image-link'>
+                      <Avatar className='post__user-image' item={user} />
+                    </a>
+                  </div>
 
-              <div className='post__body'>
-                <div className='post__user-info'>
-                  <a href='#' className='user-info__name'>
-                    Victor Robles
-                  </a>
-                  <span className='user-info__divider'> | </span>
-                  <a href='#' className='user-info__create-date'>
-                    Hace 1 hora
-                  </a>
+                  <div className='post__body'>
+                    <div className='post__user-info'>
+                      <a href='#' className='user-info__name'>
+                        Robles
+                      </a>
+                      <span className='user-info__divider'> | </span>
+                      <a href='#' className='user-info__create-date'>
+                        Hace 1 hora
+                      </a>
+                    </div>
+
+                    <h4 className='post__content'>{item.text}</h4>
+                  </div>
                 </div>
-
-                <h4 className='post__content'>Hola, buenos dias.</h4>
-              </div>
+                {user._id === auth._id && (
+                  <div className='post__buttons'>
+                    <button onClick={() => deletePublication(item._id)} className='post__button'>
+                      <i className='fa-solid fa-trash-can'></i>
+                    </button>
+                  </div>
+                )}
+              </article>
+            )
+          })}
+          {loading ? (
+            <div className='loading__container'>
+              <i className='layout__loading--spin fas fa-spinner fa-spin fa-2x'></i>
             </div>
-
-            <div className='post__buttons'>
-              <a href='#' className='post__button'>
-                <i className='fa-solid fa-trash-can'></i>
-              </a>
-            </div>
-          </article>
+          ) : (
+            ''
+          )}
         </div>
+        {more && (
+          <div className='content__container-btn'>
+            <button className='content__btn-more-post' onClick={nextPage}>
+              More publications
+            </button>
+          </div>
+        )}
       </section>
     </>
   )
