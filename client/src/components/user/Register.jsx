@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { useForm } from '../../hooks/useForm'
 import { Global } from '../../helpers/Global'
+import { Navigate } from 'react-router-dom'
 
 export const Register = () => {
   const { form, changed } = useForm()
   const [saved, setSaved] = useState('not set')
+  const [redirect, setRedirect] = useState(false)
 
   const saveUser = e => {
     e.preventDefault()
@@ -18,10 +20,19 @@ export const Register = () => {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.status == 'Success') setSaved('User register')
-        if (data.status == 'Error') setSaved('Error')
+        if (data.status === 'Success') {
+          setSaved('User register')
+          setTimeout(() => {
+            setRedirect(true)
+          }, 1000)
+        }
+        if (data.status === 'Error') setSaved('Error')
         console.log(data)
       })
+  }
+
+  if (redirect) {
+    return <Navigate to='/login' />
   }
 
   return (
@@ -31,16 +42,8 @@ export const Register = () => {
       </header>
 
       <div className='content__posts'>
-        {saved == 'User register' ? (
-          <strong className='alert alert_success'>{saved}</strong>
-        ) : (
-          ''
-        )}
-        {saved == 'Error' ? (
-          <strong className='alert alert_error'>{saved}</strong>
-        ) : (
-          ''
-        )}
+        {saved === 'User register' ? <strong className='alert alert_success'>{saved}</strong> : ''}
+        {saved === 'Error' ? <strong className='alert alert_error'>{saved}</strong> : ''}
         <form className='register-form' onSubmit={saveUser}>
           <div className='form-group'>
             <label htmlFor='name'>Name</label>

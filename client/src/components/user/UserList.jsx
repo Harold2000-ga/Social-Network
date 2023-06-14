@@ -4,6 +4,7 @@ import { Avatar } from '../layout/private/Avatar'
 import useAuth from '../../hooks/useAuth'
 import { Global } from '../../helpers/Global'
 import { Link } from 'react-router-dom'
+import ReactTimeAgo from 'react-time-ago'
 
 export const UserList = ({
   more,
@@ -78,7 +79,7 @@ export const UserList = ({
                     </Link>
                     <span className='user-info__divider'> | </span>
                     <Link to={`/social/profile/${item._id}`} className='user-info__create-date'>
-                      {item.date}
+                      <ReactTimeAgo date={item.date} locale='en-US' />
                     </Link>
                   </div>
 

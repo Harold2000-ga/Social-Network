@@ -6,6 +6,7 @@ import { Avatar } from '../layout/private/Avatar'
 import { Global } from '../../helpers/Global'
 import { Link } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
+import { PublicationList } from '../publication/PublicationList'
 
 export const Profile = () => {
   //Hooks
@@ -21,7 +22,8 @@ export const Profile = () => {
 
   useEffect(() => {
     getDataUser()
-    getPublication()
+    getPublication(1, true)
+    setMore(true)
     getCounters()
   }, [params.id])
 
@@ -92,7 +94,7 @@ export const Profile = () => {
       })
   }
   //Publication from User
-  const getPublication = (nextPage = 1) => {
+  const getPublication = (nextPage = 1, newProfile = false) => {
     //GET from the API
     fetch(`${Global.url}/publication/user/${params.id}/${nextPage}`, {
       method: 'GET',
@@ -104,11 +106,23 @@ export const Profile = () => {
       .then(res => res.json())
       .then(data => {
         if (data.status == 'Success') {
-          if (publications.length > 1) {
-            console.log(data.Publications)
-            setPublications([...publications, ...data.Publications])
-          } else setPublications(data.Publications)
-          if (publications.length >= data.totalPublications - data.Publications.length) {
+          console.log(data.status)
+          let newPublications = data.Publications
+          if (!newProfile && publications.length > 1) {
+            newPublications = [...publications, ...data.Publications]
+          }
+          if (newProfile) {
+            newPublications = data.Publications
+            setMore(true)
+            setPage(1)
+          }
+
+          setPublications(newPublications)
+
+          if (
+            !newProfile &&
+            publications.length >= data.totalPublications - data.Publications.length
+          ) {
             setMore(false)
           }
           setLoading(false)
@@ -116,30 +130,6 @@ export const Profile = () => {
       })
   }
   //Logic pagination
-  const nextPage = () => {
-    const next = page + 1
-    setPage(next)
-    getPublication(next)
-  }
-  //Delete Publication from Database and Layout
-  const deletePublication = id => {
-    //Delete from the Database
-    fetch(`${Global.url}/publication/delete/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: localStorage.getItem('token'),
-      },
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.status == 'Success') {
-          const filterPublications = publications.filter(item => item._id !== id)
-          setPublications(filterPublications)
-          setCounters({ ...counters, publications: counters.publications - 1 })
-        }
-      })
-  }
 
   //Render
   return (
@@ -210,56 +200,16 @@ export const Profile = () => {
           )}
         </header>
 
-        <div className='content__posts'>
-          {publications?.map(item => {
-            return (
-              <article key={item._id} className='posts__post'>
-                <div className='post__container'>
-                  <div className='post__image-user'>
-                    <a href='#' className='post__image-link'>
-                      <Avatar className='post__user-image' item={user} />
-                    </a>
-                  </div>
-
-                  <div className='post__body'>
-                    <div className='post__user-info'>
-                      <a href='#' className='user-info__name'>
-                        Robles
-                      </a>
-                      <span className='user-info__divider'> | </span>
-                      <a href='#' className='user-info__create-date'>
-                        Hace 1 hora
-                      </a>
-                    </div>
-
-                    <h4 className='post__content'>{item.text}</h4>
-                  </div>
-                </div>
-                {user._id === auth._id && (
-                  <div className='post__buttons'>
-                    <button onClick={() => deletePublication(item._id)} className='post__button'>
-                      <i className='fa-solid fa-trash-can'></i>
-                    </button>
-                  </div>
-                )}
-              </article>
-            )
-          })}
-          {loading ? (
-            <div className='loading__container'>
-              <i className='layout__loading--spin fas fa-spinner fa-spin fa-2x'></i>
-            </div>
-          ) : (
-            ''
-          )}
-        </div>
-        {more && (
-          <div className='content__container-btn'>
-            <button className='content__btn-more-post' onClick={nextPage}>
-              More publications
-            </button>
-          </div>
-        )}
+        <PublicationList
+          publications={publications}
+          setPublications={setPublications}
+          page={page}
+          setPage={setPage}
+          more={more}
+          loading={loading}
+          user={user}
+          getPublication={getPublication}
+        />
       </section>
     </>
   )

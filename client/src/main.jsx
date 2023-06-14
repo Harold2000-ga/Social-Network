@@ -8,4 +8,11 @@ import './assets/css/normalize.css'
 import './assets/css/styles.css'
 import './assets/css/responsive.css'
 
+//React time ago config
+
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en-AG.json'
+TimeAgo.addDefaultLocale(en)
+TimeAgo.addLocale(en)
+
 ReactDOM.createRoot(document.getElementById('root')).render(<App />)
