@@ -1,5 +1,4 @@
 import React from 'react'
-import useAuth from '../../../hooks/useAuth'
 import { Global } from '../../../helpers/Global'
 import avatar from '../../../assets/img/user.png'
 
