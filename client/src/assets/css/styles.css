@@ -292,6 +292,7 @@ body {
   width: 100%;
   display: flex;
   justify-content: center;
+  padding: 2rem 0;
 }
 
 .content__btn-more-post {
