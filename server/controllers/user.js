@@ -209,6 +209,9 @@ const update = (req, res) => {
           message: 'Not Found',
         })
       }
+      if (req.file) {
+        userToUpdate.image = req.file.path
+      }
       //Password
       if (userToUpdate.password) {
         let password = await bcrypt.hash(userToUpdate.password, 10)

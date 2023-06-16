@@ -7,11 +7,7 @@ export const Avatar = ({ className, item }) => {
   return (
     <>
       {item.image != 'default_png' && (
-        <img
-          src={`${Global.url}/user/avatar/${item.image}`}
-          className={className}
-          alt='Profile picture'
-        />
+        <img src={item.image} className={className} alt='Profile picture' loading='lazy' />
       )}
       {item.image == 'default_png' && (
         <img src={avatar} className={className} alt='Profile picture' />

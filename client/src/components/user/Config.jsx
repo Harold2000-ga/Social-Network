@@ -13,15 +13,21 @@ export const Config = () => {
   const updateUser = e => {
     e.preventDefault()
     //Get data from Form
-    const userUpdated = SerializeForm(e.target)
-    //Delete file0
-    delete userUpdated.file0
+    const formData = new FormData()
+    formData.append('name', e.target.name.value)
+    formData.append('surname', e.target.surname.value)
+    formData.append('nickname', e.target.nickname.value)
+    formData.append('email', e.target.email.value)
+    formData.append('bio', e.target.bio.value)
+    formData.append('password', e.target.password.value)
+
+    const fileInput = document.querySelector('#file')
+    formData.append('image', fileInput.files[0])
     //Update in data Base
     fetch(`${Global.url}/user/update`, {
       method: 'PUT',
-      body: JSON.stringify(userUpdated),
+      body: formData,
       headers: {
-        'Content-type': 'application/json',
         Authorization: token,
       },
     })
@@ -34,31 +40,6 @@ export const Config = () => {
           setSaved('Saved')
         } else {
           setSaved('Error')
-        }
-        //Upload Image
-        const fileInput = document.querySelector('#file')
-        if (data.status == 'Success' && data.user) {
-          const formData = new FormData()
-          formData.append('file0', fileInput.files[0])
-
-          //Upload
-          fetch(`${Global.url}/user/upload`, {
-            method: 'POST',
-            body: formData,
-            headers: {
-              Authorization: token,
-            },
-          })
-            .then(res => res.json())
-            .then(uploadData => {
-              if (uploadData.status == 'Success') {
-                delete uploadData.user.password
-                setAuth(uploadData.user)
-                setSaved('Saved')
-              } else {
-                setSaved('Error')
-              }
-            })
         }
       })
   }
@@ -106,7 +87,7 @@ export const Config = () => {
               <Avatar className='container-avatar__img' item={auth} />
             </div>
             <br />
-            <input type='file' name='file0' id='file' />
+            <input type='file' name='image' id='file' />
           </div>
           <br />
           <input type='submit' value='Update' className='btn btn-success' />
