@@ -28,6 +28,9 @@ const save = (req, res) => {
     user: req.user.id,
     text: params.text,
   })
+  if (req.file) {
+    newPublication.file = req.file.path
+  }
   newPublication
     .save()
     .then(item => {

@@ -3,21 +3,27 @@ import useAuth from '../../../hooks/useAuth'
 import { Avatar } from './Avatar'
 import { Link } from 'react-router-dom'
 import { Global } from '../../../helpers/Global'
-import { useForm } from '../../../hooks/useForm'
+
 export const Aside = () => {
   const { auth, counters, setCounters } = useAuth()
-  const { form, changed } = useForm()
   const [saved, setSaved] = useState('not saved')
 
   const Save = e => {
     e.preventDefault()
-    const newPublication = form
+    //Create form data and get token
+    const formData = new FormData()
     const token = localStorage.getItem('token')
+    //set Text
+    formData.append('text', e.target.text.value)
+
+    //Set Image
+    const fileInput = document.querySelector('#fileUpload')
+    formData.append('image', fileInput.files[0])
+
     fetch(`${Global.url}/publication/save`, {
       method: 'POST',
-      body: JSON.stringify(newPublication),
+      body: formData,
       headers: {
-        'Content-type': 'application/json',
         Authorization: token,
       },
     })
@@ -28,32 +34,6 @@ export const Aside = () => {
           setSaved('Saved')
         } else {
           setSaved('Error')
-        }
-
-        //Upload image
-        const fileInput = document.querySelector('#fileUpload')
-        if (data.status == 'Success' && fileInput.files[0]) {
-          const formData = new FormData()
-          formData.append('file0', fileInput.files[0])
-          fetch(`${Global.url}/publication/upload/${data.publication._id}`, {
-            method: 'POST',
-            body: formData,
-            headers: {
-              Authorization: token,
-            },
-          })
-            .then(res => res.json())
-            .then(uploadData => {
-              if (uploadData.status == 'Success') {
-                setSaved('Saved')
-              } else {
-                setSaved('Error')
-              }
-              if (data.status == 'Success' && uploadData.status == 'Success') {
-                const myForm = document.querySelector('#publication-form')
-                myForm.reset()
-              }
-            })
         }
       })
   }
@@ -96,10 +76,10 @@ export const Aside = () => {
             </div>
 
             <div className='stats__following'>
-              <a href='#' className='following__link'>
+              <Link to={`/social/profile/${auth._id}`} className='following__link'>
                 <span className='following__title'>Publications</span>
                 <span className='following__number'>{counters.publications}</span>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -115,14 +95,14 @@ export const Aside = () => {
               <label htmlFor='text' className='form-post__label'>
                 ¿What are you thinking today?
               </label>
-              <textarea name='text' className='form-post__textarea' onChange={changed} />
+              <textarea name='text' className='form-post__textarea' />
             </div>
 
             <div className='form-post__inputs'>
-              <label htmlFor='file' className='form-post__label' onChange={changed}>
+              <label htmlFor='file' className='form-post__label'>
                 Upload image
               </label>
-              <input type='file' name='file0' id='fileUpload' className='form-post__image' />
+              <input type='file' name='image' id='fileUpload' className='form-post__image' />
             </div>
 
             <input type='submit' value='Send' className='form-post__btn-submit' />

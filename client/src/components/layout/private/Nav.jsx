@@ -21,12 +21,12 @@ export const Nav = () => {
             </NavLink>
           </li>
 
-          <li className='menu-list__item'>
+          {/* <li className='menu-list__item'>
             <NavLink to='/social/feed' className='menu-list__link'>
               <i className='fa-solid fa-list'></i>
               <span className='menu-list__title'>Timeline</span>
             </NavLink>
-          </li>
+          </li> */}
 
           <li className='menu-list__item'>
             <NavLink to='/social/people' className='menu-list__link'>
@@ -88,12 +88,12 @@ export const Nav = () => {
                 </NavLink>
               </li>
 
-              <li className='hamburguesa__list-container' onClick={handleClick}>
+              {/* <li className='hamburguesa__list-container' onClick={handleClick}>
                 <NavLink to='/social/feed' className='nav-hamburger_list-item'>
                   <i className='fa-solid fa-list'></i>
                   <span className='menu-list__title'>Timeline</span>
                 </NavLink>
-              </li>
+              </li> */}
 
               <li className='hamburguesa__list-container' onClick={handleClick}>
                 <NavLink to='/social/people' className='nav-hamburger_list-item'>

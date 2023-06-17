@@ -69,7 +69,7 @@ export const PublicationList = ({
                   <h4 className='post__content'>{item.text}</h4>
                   {item.file && (
                     <div className='post__image-publication'>
-                      <img src={`${Global.url}/publication/media/${item.file}`} />
+                      <img src={item.file} />
                     </div>
                   )}
                 </div>
