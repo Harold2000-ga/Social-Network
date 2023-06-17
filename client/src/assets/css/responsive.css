@@ -79,11 +79,15 @@
   }
   .posts__post {
     flex-direction: column;
-    align-items: end;
+    align-items: flex-start;
+  }
+  .stats__following:first-child {
+    padding: 0;
   }
 
   .stats__following {
-    padding: 0.4;
+    padding: 0;
+    border-right: none;
   }
   .nav-hamburger-open {
     width: 70%;
