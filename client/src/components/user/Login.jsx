@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useForm } from '../../hooks/useForm'
 import { Global } from '../../helpers/Global'
 import useAuth from '../../hooks/useAuth'
+import { NavLink } from 'react-router-dom'
 
 export const Login = () => {
   const { form, changed } = useForm()
@@ -42,16 +43,8 @@ export const Login = () => {
       <header className='content__header content__header--public'>
         <h1 className='content__title'>Login</h1>
       </header>
-      {login == 'User Login' ? (
-        <strong className='alert alert_success'>{login}</strong>
-      ) : (
-        ''
-      )}
-      {login == 'Error' ? (
-        <strong className='alert alert_error'>{login}</strong>
-      ) : (
-        ''
-      )}
+      {login == 'User Login' ? <strong className='alert alert_success'>{login}</strong> : ''}
+      {login == 'Error' ? <strong className='alert alert_error'>{login}</strong> : ''}
 
       <div className='content__posts'>
         <form className='form-login' onSubmit={loginUser}>
@@ -63,6 +56,11 @@ export const Login = () => {
             <label htmlFor='password'>Password</label>
             <input onChange={changed} type='password' name='password' />
           </div>
+
+          <p className='text-login'>
+            <NavLink to='/register'>Register</NavLink> if you don't have a account.
+          </p>
+
           <input type='submit' value='Log-In' className='btn btn-success' />
         </form>
       </div>

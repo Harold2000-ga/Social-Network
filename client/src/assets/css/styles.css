@@ -331,6 +331,7 @@ body {
 }
 
 .general-info__container-avatar {
+  flex-shrink: 0;
   width: 7.5rem;
   height: 7.5rem;
   border-radius: 100rem;
@@ -371,7 +372,9 @@ body {
   border-right: 2px solid var(--color-border-headers);
   text-align: center;
 }
-
+.stats__following:last-child {
+  border-right: 0px;
+}
 .following__title {
   display: block;
   font-weight: bold;
@@ -464,6 +467,10 @@ button {
   cursor: pointer;
   font-size: 1.4rem;
 }
+.form-post__btn-submit:hover {
+  background-color: var(--color-background-btn-success-hover);
+  border-color: var(--color-border-btn-success-hover);
+}
 .alert {
   width: 50%;
   display: block;
@@ -492,18 +499,23 @@ button {
   margin: 0 auto;
   color: var(--color-backgroud-navbar);
 }
+
+.aside__loading--spin {
+  margin: 1rem;
+  color: var(--color-backgroud-navbar);
+}
 .loading__container {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem 0 2rem 0;
 }
-.menu-hamburguesa {
+.menu-hamburger {
   display: none;
   justify-content: flex-end;
   align-items: flex-end;
 }
-.nav-hamburguesa {
+.nav-hamburger {
   position: fixed;
   top: 0;
   left: 0;
@@ -517,11 +529,11 @@ button {
   will-change: transform;
   opacity: 0;
 }
-.nav-hamburguesa-open {
+.nav-hamburger-open {
   transform: translateX(0%);
   opacity: 1;
 }
-.nav-hamburguesa__shadow {
+.nav-hamburger__shadow {
   position: fixed;
   top: 0;
   left: 0;
@@ -530,7 +542,7 @@ button {
   background-color: rgba(0, 0, 0, 0.7);
   transition: all ease-in-out 300ms;
 }
-.nav-hamburguesa__header {
+.nav-hamburger__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -550,16 +562,24 @@ button {
   align-items: center;
   justify-content: center;
 }
-.hamburguesa__list-container {
+.hamburger__list-container {
   width: 70%;
   border-radius: 1.5rem;
   border: 1px solid #ececec;
 }
-.hamburguesa__list-container:hover {
+.hamburger__list-container:hover {
   background-color: var(--color-hover-navbar);
 }
 .fa-times:hover,
 .fa-bars:hover {
   cursor: pointer;
   opacity: 90%;
+}
+.text-login {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+.text-login a {
+  color: var(--color-backgroud-navbar);
 }

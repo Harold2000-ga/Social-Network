@@ -61,13 +61,13 @@ export const Nav = () => {
           </li>
         </ul>
       </div>
-      <div className='menu-hamburguesa'>
+      <div className='menu-hamburger'>
         <i className='fa-solid fa-bars' onClick={handleClick}></i>
       </div>
       {nav && (
-        <div className='nav-hamburguesa__shadow'>
-          <div className={`nav-hamburguesa ${nav ? 'nav-hamburguesa-open' : ''}`}>
-            <div className='nav-hamburguesa__header'>
+        <div className='nav-hamburger__shadow'>
+          <div className={`nav-hamburger ${nav ? 'nav-hamburger-open' : ''}`}>
+            <div className='nav-hamburger__header'>
               <div>
                 <NavLink to={`profile/${auth._id}`} className='list-end__link-image'>
                   <Avatar className='list-end__img' item={auth} />
@@ -81,34 +81,34 @@ export const Nav = () => {
             </div>
 
             <ul className='nav-hamburger_list'>
-              <li className='hamburguesa__list-container' onClick={handleClick}>
+              <li className='hamburger__list-container' onClick={handleClick}>
                 <NavLink to='/social' className='nav-hamburger_list-item'>
                   <i className='fa-solid fa-house'></i>
                   <span className='menu-list__title'>Home</span>
                 </NavLink>
               </li>
 
-              {/* <li className='hamburguesa__list-container' onClick={handleClick}>
+              {/* <li className='hamburger__list-container' onClick={handleClick}>
                 <NavLink to='/social/feed' className='nav-hamburger_list-item'>
                   <i className='fa-solid fa-list'></i>
                   <span className='menu-list__title'>Timeline</span>
                 </NavLink>
               </li> */}
 
-              <li className='hamburguesa__list-container' onClick={handleClick}>
+              <li className='hamburger__list-container' onClick={handleClick}>
                 <NavLink to='/social/people' className='nav-hamburger_list-item'>
                   <i className='fa-solid fa-user'></i>
                   <span className='menu-list__title'>People</span>
                 </NavLink>
               </li>
 
-              <li className='hamburguesa__list-container' onClick={handleClick}>
+              <li className='hamburger__list-container' onClick={handleClick}>
                 <NavLink to='/social/config' className='nav-hamburger_list-item'>
                   <i className='fa-solid fa-gear'></i>
                   <span className='list-end__name'>Setting</span>
                 </NavLink>
               </li>
-              <li className='hamburguesa__list-container' onClick={handleClick}>
+              <li className='hamburger__list-container' onClick={handleClick}>
                 <NavLink to='/social/logout' href='#' className='nav-hamburger_list-item'>
                   <i className='fa-solid fa-arrow-right-from-bracket'></i>
                   <span className='list-end__name'>Close session</span>

@@ -65,15 +65,14 @@
   .navbar__container-lists {
     display: none;
   }
-  .menu-hamburguesa {
+  .menu-hamburger {
     display: flex;
   }
 }
 
 @media (max-width: 447px) {
   .profile-info__stats {
-    flex-direction: column;
-    align-items: normal;
+    font-size: 1.2rem;
   }
   .post__content {
     font-size: 1.4rem;
@@ -82,15 +81,11 @@
     flex-direction: column;
     align-items: end;
   }
-  .stats__following:first-child {
-    padding: 0;
-  }
 
   .stats__following {
-    padding: 0;
-    border-right: none;
+    padding: 0.4;
   }
-  .nav-hamburguesa-open {
+  .nav-hamburger-open {
     width: 70%;
   }
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useForm } from '../../hooks/useForm'
 import { Global } from '../../helpers/Global'
-import { Navigate } from 'react-router-dom'
+import { NavLink, Navigate } from 'react-router-dom'
 
 export const Register = () => {
   const { form, changed } = useForm()
@@ -65,6 +65,10 @@ export const Register = () => {
             <label htmlFor='password'>Password</label>
             <input onChange={changed} type='password' name='password' />
           </div>
+          <p className='text-login'>
+            <NavLink to='/login'>Log-in</NavLink> if you already have a account.
+          </p>
+
           <input type='submit' value='Register' className='btn btn-success' />
         </form>
       </div>

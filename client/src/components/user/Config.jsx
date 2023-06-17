@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import useAuth from '../../hooks/useAuth'
 import { Avatar } from '../layout/private/Avatar'
-import { SerializeForm } from '../../helpers/SerializeForm'
 import { Global } from '../../helpers/Global'
 
 export const Config = () => {
   const [saved, setSaved] = useState('not saved')
   const { auth, setAuth } = useAuth()
   const token = localStorage.getItem('token')
+  const [loading, setLoading] = useState(false)
 
   //Update
   const updateUser = e => {
@@ -22,7 +22,10 @@ export const Config = () => {
     formData.append('password', e.target.password.value)
 
     const fileInput = document.querySelector('#file')
-    formData.append('image', fileInput.files[0])
+    if (fileInput.files[0]) {
+      setLoading(true)
+      formData.append('image', fileInput.files[0])
+    }
     //Update in data Base
     fetch(`${Global.url}/user/update`, {
       method: 'PUT',
@@ -33,6 +36,7 @@ export const Config = () => {
     })
       .then(res => res.json())
       .then(data => {
+        setLoading(false)
         if (data.status == 'Success' && data.user) {
           delete data.user.password
 
@@ -47,6 +51,14 @@ export const Config = () => {
   return (
     <>
       <header className='content__header content__header--public'>
+        {loading ? (
+          <div className='loading__container nav-hamburger__shadow'>
+            <i className='aside__loading--spin fas fa-spinner fa-spin fa-2x'></i>
+            <h2 className='aside__loading--spin'>Uploading</h2>
+          </div>
+        ) : (
+          ''
+        )}
         <h1 className='content__title'>Settings</h1>
       </header>
       <div className='content__posts'>

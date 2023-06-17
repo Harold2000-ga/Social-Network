@@ -7,10 +7,12 @@ import { Global } from '../../../helpers/Global'
 export const Aside = () => {
   const { auth, counters, setCounters } = useAuth()
   const [saved, setSaved] = useState('not saved')
+  const [loading, setLoading] = useState(false)
 
   const Save = e => {
     e.preventDefault()
     //Create form data and get token
+    setLoading(true)
     const formData = new FormData()
     const token = localStorage.getItem('token')
     //set Text
@@ -29,6 +31,7 @@ export const Aside = () => {
     })
       .then(res => res.json())
       .then(data => {
+        setLoading(false)
         if (data.status == 'Success') {
           setCounters({ ...counters, publications: counters.publications + 1 })
           setSaved('Saved')
@@ -40,6 +43,14 @@ export const Aside = () => {
 
   return (
     <aside className='layout__aside'>
+      {loading ? (
+        <div className='loading__container nav-hamburger__shadow'>
+          <i className='aside__loading--spin fas fa-spinner fa-spin fa-2x'></i>
+          <h2 className='aside__loading--spin'>Uploading</h2>
+        </div>
+      ) : (
+        ''
+      )}
       <header className='aside__header'>
         <h1 className='aside__title'>Hi, {auth.name}</h1>
       </header>
