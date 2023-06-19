@@ -241,6 +241,11 @@ body {
   width: 100%;
   height: 100%;
 }
+.post__image-publication img {
+  max-height: 500px;
+  object-fit: fill;
+  max-width: auto;
+}
 
 .user-info__name {
   color: var(--color-name-user);

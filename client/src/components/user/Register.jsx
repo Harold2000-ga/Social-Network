@@ -11,6 +11,7 @@ export const Register = () => {
   const saveUser = e => {
     e.preventDefault()
     const newUser = form
+
     fetch(`${Global.url}/user/register`, {
       method: 'POST',
       body: JSON.stringify(newUser),
@@ -26,8 +27,8 @@ export const Register = () => {
             setRedirect(true)
           }, 1000)
         }
-        if (data.status === 'Error') setSaved('Error')
-        console.log(data)
+        if (data.message === 'Not enough data') setSaved('Not enough data')
+        if (data.message === 'User already exist') setSaved('User already exist')
       })
   }
 
@@ -43,7 +44,12 @@ export const Register = () => {
 
       <div className='content__posts'>
         {saved === 'User register' ? <strong className='alert alert_success'>{saved}</strong> : ''}
-        {saved === 'Error' ? <strong className='alert alert_error'>{saved}</strong> : ''}
+        {saved === 'User already exist' ? (
+          <strong className='alert alert_error'>{saved}</strong>
+        ) : (
+          ''
+        )}
+        {saved === 'Not enough data' ? <strong className='alert alert_error'>{saved}</strong> : ''}
         <form className='register-form' onSubmit={saveUser}>
           <div className='form-group'>
             <label htmlFor='name'>Name</label>

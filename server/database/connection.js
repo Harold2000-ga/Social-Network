@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 require('dotenv').config()
 
-// eslint-disable-next-line no-undef
 //const urlLocal = 'mongodb://127.0.0.1:27017/Red_Social'
+// eslint-disable-next-line no-undef
 const urlCloud = process.env.MONGODB_URI
 
 const connection = async () => {

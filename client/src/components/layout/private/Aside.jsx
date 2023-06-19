@@ -12,15 +12,21 @@ export const Aside = () => {
   const Save = e => {
     e.preventDefault()
     //Create form data and get token
-    setLoading(true)
     const formData = new FormData()
     const token = localStorage.getItem('token')
     //set Text
     formData.append('text', e.target.text.value)
-
+    if (e.target.text.value.length == 0) {
+      setSaved('Empty')
+      return
+    }
+    console.log(e.target.text.value.length)
     //Set Image
     const fileInput = document.querySelector('#fileUpload')
-    formData.append('image', fileInput.files[0])
+    if (fileInput.files[0]) {
+      setLoading(true)
+      formData.append('image', fileInput.files[0])
+    }
 
     fetch(`${Global.url}/publication/save`, {
       method: 'POST',
@@ -98,6 +104,11 @@ export const Aside = () => {
         <div className='aside__container-form'>
           {saved == 'Saved' ? (
             <strong className='alert alert_success'>Publication upload!!</strong>
+          ) : (
+            ''
+          )}
+          {saved == 'Empty' ? (
+            <strong className='alert alert_error'>The text can not be empty!!</strong>
           ) : (
             ''
           )}

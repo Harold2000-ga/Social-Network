@@ -1,5 +1,4 @@
 import React from 'react'
-import { Global } from '../../../helpers/Global'
 import avatar from '../../../assets/img/user.png'
 
 export const Avatar = ({ className, item }) => {

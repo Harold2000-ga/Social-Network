@@ -34,7 +34,8 @@ export const Login = () => {
             window.location.reload()
           }, 800)
         }
-        if (data.status == 'Error') setLogin('Error')
+        if (data.message == 'The user no exist') setLogin('The user no exist')
+        if (data.message == 'Wrong password') setLogin('Wrong password')
       })
   }
 
@@ -44,7 +45,8 @@ export const Login = () => {
         <h1 className='content__title'>Login</h1>
       </header>
       {login == 'User Login' ? <strong className='alert alert_success'>{login}</strong> : ''}
-      {login == 'Error' ? <strong className='alert alert_error'>{login}</strong> : ''}
+      {login == 'Wrong password' ? <strong className='alert alert_error'>{login}</strong> : ''}
+      {login == 'The user no exist' ? <strong className='alert alert_error'>{login}</strong> : ''}
 
       <div className='content__posts'>
         <form className='form-login' onSubmit={loginUser}>
