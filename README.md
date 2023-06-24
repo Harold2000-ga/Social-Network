@@ -12,8 +12,8 @@ React Social is a basic social network built with HTML, CSS, React, MongoDB, Nod
   
   <h2>URL✔</h2>
   <p>https://hg-social-network.vercel.app/</p>
-  
-<ul><h2>Features</h2>
+  <h2>Features</h2>
+<ul>
 
   <li>User registration and login with JWT</li>
   <li>Posting messages</li>
